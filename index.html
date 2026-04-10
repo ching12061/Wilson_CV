@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>程煒俊 Wilson Ching | AI Director & Post-Production Expert</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:italic,wght@700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #1a1a1a;
+            --text-muted: #666666;
+            --accent: #000000;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        .reveal-text { overflow: hidden; }
+
+        /* 还原回第一版：渐变发光黑体 */
+        .name-cn {
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to right, #000, #444, #000);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 5s linear infinite;
+            display: block;
+        }
+
+        /* 浅灰色 Bebas Neue, 斜体, 紧凑字间距, 紧凑行间距 */
+        .name-en-fancy {
+            font-family: 'Bebas Neue', cursive;
+            text-transform: uppercase;
+            font-style: italic;
+            letter-spacing: -0.02em; /* 紧凑字间距 */
+            color: #d1d5db; /* gray-300 */
+            font-size: 10vw;
+            line-height: 0.8; /* 核心修改：让上下单词靠得更近 */
+            display: block;
+        }
+
+        .name-en {
+            font-family: 'Bebas Neue', cursive;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .name-suffix {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease-out;
+            mix-blend-mode: difference;
+            background: white;
+            opacity: 0;
+        }
+
+        .hover-scale {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hover-scale:hover { transform: scale(1.01); }
+
+        .nav-link { position: relative; overflow: hidden; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .experience-item {
+            border-left: 2px solid #000;
+            padding-left: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 50%;
+        }
+
+        .profile-img-container {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 3/4;
+            background: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(10%);
+            transition: filter 0.5s ease, transform 0.8s ease;
+        }
+        
+        .profile-img-container:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; 
+            background: #000;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            object-fit: cover;
+        }
+
+        .ai-badge {
+            background: linear-gradient(90deg, #ff00cc, #3333ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .lang-en { font-size: 0.85rem; color: #888; margin-top: 2px; display: block; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="cursor hidden md:block"></div>
+
+    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center mix-blend-difference text-white md:text-black md:mix-blend-normal bg-white/80 backdrop-blur-sm">
+        <div class="text-2xl font-black tracking-widest italic name-en">WILSON CHING.</div>
+        <div class="hidden md:flex space-x-12 font-medium text-sm">
+            <a href="#work" class="nav-link">作品 REEL</a>
+            <a href="#ai-section" class="nav-link">AI 制作 AI PROD</a>
+            <a href="#experience" class="nav-link">履历 PROFILE</a>
+            <a href="#contact" class="nav-link">合作 CONTACT</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col md:flex-row items-center justify-center px-8 md:px-24 pt-20">
+        <div class="flex-1 order-2 md:order-1 mt-12 md:mt-0">
+            <h1 class="reveal-text">
+                <span class="text-7xl md:text-[8vw] font-black leading-[0.85] tracking-tighter hero-line name-cn" style="opacity: 0; transform: translateY(50px);">程煒俊</span>
+                <!-- 修改处：将英文名分为两行，并应用更紧凑的行高 -->
+                <span class="hero-line name-en-fancy" style="opacity: 0; transform: translateY(40px);">
+                    WILSON<br>CHING
+                </span>
+                <span class="block text-4xl md:text-[4.5vw] leading-none hero-line name-suffix underline decoration-1 text-nowrap mt-4" style="opacity: 0; transform: translateY(50px);">Film & AI Director.</span>
+            </h1>
+            <div class="mt-12 max-w-xl hero-sub" style="opacity: 0; transform: translateY(20px);">
+                <p class="text-lg text-gray-500 leading-relaxed font-light">
+                    导演 / AI 制作专家。精通剧本创作、视觉生成至后期全链路 AI 电影制作，重塑未来影视叙事边界。
+                    <span class="lang-en">Director & AI Production Expert. Specialized in the end-to-end AI film production workflow from script writing and visual generation to post-production.</span>
+                </p>
+            </div>
+        </div>
+        
+        <div class="flex-none order-1 md:order-2 md:ml-12 hero-line opacity-0" style="transform: translateY(50px);">
+            <div class="profile-img-container shadow-2xl">
+                <img src="https://sns-avatar-qc.xhscdn.com/avatar/1040g2jo314tmqjpt1e005oicidlk1thm07kg5c0?imageView2/2/w/540/format/webp" 
+                     alt="Wilson Ching Profile - AI Director">
+                <div class="absolute bottom-4 right-4 bg-black text-white text-[10px] px-2 py-1 tracking-widest font-bold name-en">
+                    W.CHING 
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Show Reel -->
+    <section id="work" class="px-8 md:px-24 py-24 bg-black text-white">
+        <div class="mb-16">
+            <h2 class="text-xs uppercase tracking-widest text-gray-500 mb-4">LATEST SHOW REEL / 最新作品集</h2>
+            <h3 class="text-4xl md:text-6xl font-black tracking-tighter italic uppercase name-en">AI Cinematic Reel</h3>
+            <div class="h-[1px] w-full bg-gray-800 mt-8"></div>
+        </div>
+
+        <div class="max-w-6xl mx-auto project-item">
+            <div class="video-wrapper hover-scale shadow-2xl mb-12 group">
+                <video id="reelVideo" controls muted loop playsinline preload="auto">
+                    <source src="https://video.kingswayvideo.com/112921116938064669075/7f40012034/1294_720_0.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                <div class="relative group">
+                    <h4 class="text-2xl font-bold mb-4 uppercase tracking-tighter italic">AI 电影短片作品展示 <span class="block text-sm font-normal text-gray-500 name-suffix">AI Short Film Showcase</span></h4>
+                    <p class="text-gray-400 leading-relaxed">
+                        利用顶级 AI 模型实现高精度视觉呈现。从脚本构思、分镜生成到动态视频制作与音效合成，实现全流程 AI 闭环。
+                        <span class="lang-en">Utilizing top-tier AI models for high-precision visual execution. Achieving a full AI production loop from script conceptualization to sound synthesis.</span>
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <span class="px-4 py-2 border border-gray-700 text-[10px] font-bold tracking-widest uppercase ai-badge name-en">AI Directed</span>
+                    <span class="px-4 py-2 border border-gray-700 text-[10px] font-bold tracking-widest uppercase name-en">Cinematic Visuals</span>
+                    <span class="px-4 py-2 border border-gray-700 text-[10px] font-bold tracking-widest uppercase name-en">HD 720P Source</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Expertise Section -->
+    <section id="ai-section" class="px-8 md:px-24 py-32 bg-white">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+            <div>
+                <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-4">AI WORKFLOW / 全流程专家</h2>
+                <h3 class="text-4xl md:text-6xl font-black tracking-tighter mb-8 italic uppercase name-en">AI Production <br>Expertise.</h3>
+                <div class="space-y-8">
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl font-bold name-en">01.</span>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1 uppercase name-en">Script Writing & Concept <span class="font-normal text-sm block">剧本创作与构思</span></h4>
+                            <p class="text-gray-500 font-light text-sm">深度利用 AI 进行剧本架构与创意激发，将想象力精准转化为可执行的电影蓝图。
+                                <span class="lang-en">Deeply leveraging AI for screenplay structuring and creative ideation.</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl font-bold name-en">02.</span>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1 uppercase name-en">Visual Generation <span class="font-normal text-sm block">视觉生成</span></h4>
+                            <p class="text-gray-500 font-light text-sm">精通 MidJourney, Kling, Nanobanana Pro, Seedance 2.0 等核心工具，打造极具美学的视觉效果。
+                                <span class="lang-en">Expertise in leading generative AI tools to create high-aesthetic visual effects.</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl font-bold name-en">03.</span>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1 uppercase name-en">AI Post-Production <span class="font-normal text-sm block">AI 后期制作</span></h4>
+                            <p class="text-gray-500 font-light text-sm">结合传统后期工艺与 AI 增强技术，在调色、修片及音效设计上实现降本增效。
+                                <span class="lang-en">Combining traditional techniques with AI enhancement for efficient production.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-100 aspect-square flex flex-col items-center justify-center p-12 text-center relative overflow-hidden">
+                <div class="text-[12vw] font-black leading-none italic ai-badge mb-4 name-en relative z-10">AI</div>
+                <p class="text-sm font-bold tracking-[0.3em] uppercase opacity-50 name-en relative z-10">Future of Cinema</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="experience" class="px-8 md:px-24 py-32 bg-[#fafafa]">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-16">
+            <div class="md:col-span-4">
+                <h2 class="text-4xl font-black tracking-tight mb-8 name-en">PROFILE. <span class="block text-sm font-normal text-gray-400 mt-2 italic">个人履历</span></h2>
+                <div class="space-y-6 text-gray-500">
+                    <p class="text-sm">作为资深导演与后期总监，我不仅在现场调度和后期视听流程上拥有丰富经验，更在 AI 电影与短片制作领域占据行业领先地位。
+                    </p>
+                    <p class="text-sm">我提供从剧本到成片的全周期 AI 解决方案，助力品牌与制片方在保持高水准艺术表达的同时，探索影视科技的最前沿。
+                    </p>
+                    <div class="pt-4 border-t border-gray-200">
+                        <span class="text-xs font-bold block mb-2 text-black uppercase tracking-widest name-en">Languages / 语言</span>
+                        <p class="text-sm text-gray-800 font-medium">English（英语）/ Cantonese（粤语） / Mandarin（国语） — Fluent</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-8">
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 mb-8 uppercase tracking-widest name-en">Career Path / 作品履历</h3>
+                    
+                    <div class="experience-item">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold uppercase name-en">Film & AI Director / 导演</h4>
+                            <span class="text-sm text-gray-400 uppercase name-en">Present</span>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800 mb-4 uppercase tracking-tighter name-en">TV Drama / Shorts / AI Production</p>
+                        <ul class="text-gray-500 space-y-4 text-sm">
+                            <li>
+                                <span class="text-black font-bold block mb-1">长剧代表作 (TV Series):</span>
+                                《宁安如梦》/《惜花芷》/《白月梵星》/《一笑随歌》/《红尘四合》等等...
+                            </li>
+                            <li>
+                                <span class="text-black font-bold block mb-1">国内短剧 (Short Dramas):</span>
+                                《蛊娘》/《和离后我名满都城》/《凤霓凰》/《他比子弹温柔》/《嗅骨》等等...
+                            </li>
+                            <li>
+                                <span class="text-black font-bold block mb-1">海外短剧 (Global Shorts):</span>
+                                《Mated to the Alpha King》(Canada 加拿大) — <span class="name-suffix">监制 & 导演</span>
+                            </li>
+                            <li>
+                                <span class="text-black font-bold block mb-1">AI 电影探索 (AI Research):</span>
+                                独立执导多部 AI 生成短片，探索极速内容产出模式。
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold uppercase name-en">Post-Production & Sound Director / 后期总监</h4>
+                            <span class="text-sm text-gray-400 uppercase name-en">2008 — Present</span>
+                        </div>
+                        <ul class="text-gray-500 space-y-2 text-sm">
+                            <li class="font-normal block text-gray-500">• 数百部后期制作经验。
+                                <span class="font-normal block text-gray-500">Experienced in hundreds of projects.</span>
+                            </li>
+                            <li>• 擅长 SFX 声音设计、对白修复及 5.1 环绕声混音。
+                                <span class="font-normal block text-gray-500">Specialized in SFX sound design, dialogue restoration, and 5.1 surround mixing.</span>
+                            </li>
+                            <li>• 精通专业影视剪辑，涵盖商业广告与影视剧集。
+                                <span class="font-normal block text-gray-500">Proficient in professional film editing for commercials and TV series.</span>
+                            </li>
+                            <li>• 深度掌握 AI 辅助剪辑工作流，提升视听叙事精度。
+                                <span class="font-normal block text-gray-500">Deeply mastered AI-enhanced editing workflows to refine audio-visual storytelling.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="px-8 md:px-24 py-48 bg-white text-center">
+        <h2 class="text-xs uppercase tracking-widest text-gray-400 mb-8 name-en">Collaboration / 商业合作</h2>
+        <div class="flex flex-col items-center justify-center group cursor-pointer">
+            <span class="text-xs font-bold tracking-[0.3em] text-gray-400 mb-1 name-en">wechat / 微信</span>
+            <div class="text-4xl md:text-[6vw] font-black tracking-tighter group-hover:italic transition-all duration-500 uppercase name-en">
+                WILSONCHING
+            </div>
+        </div>
+        <div class="mt-24 flex justify-center space-x-12 text-sm font-bold uppercase tracking-widest name-en">
+            <a href="https://www.xiaohongshu.com/user/profile/624c936b000000001000f636" target="_blank" class="nav-link">RED / 小红书</a>
+            <a href="https://www.instagram.com/ching1206/" target="_blank" class="nav-link">Instagram</a>
+        </div>
+        <div class="mt-32 text-[10px] text-gray-300 uppercase tracking-widest name-en">
+            © 2024 WILSON CHING — FILM DIRECTOR & AI EXPERT
+        </div>
+    </footer>
+
+    <script>
+        window.onload = function() {
+            if (typeof gsap === 'undefined') return;
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            const cursor = document.querySelector('.cursor');
+            gsap.set(cursor, { opacity: 1 });
+
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, { x: e.clientX - 10, y: e.clientY - 10, duration: 0.1 });
+            });
+
+            document.querySelectorAll('a, .hover-scale, .profile-img-container, .video-wrapper').forEach(el => {
+                el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 3, opacity: 0.1, duration: 0.3 }));
+                el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, opacity: 1, duration: 0.3 }));
+            });
+
+            gsap.to(".hero-line", { y: 0, opacity: 1, duration: 1.5, stagger: 0.2, ease: "expo.out" });
+            gsap.to(".hero-sub", { opacity: 1, y: 0, duration: 1.5, delay: 0.8, ease: "power4.out" });
+
+            gsap.from(".project-item", {
+                scrollTrigger: { trigger: "#work", start: "top 70%" },
+                opacity: 0, y: 50, duration: 1.5, ease: "expo.out"
+            });
+
+            const reelVideo = document.getElementById('reelVideo');
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        reelVideo.play().catch(e => {});
+                    } else {
+                        reelVideo.pause();
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            if (reelVideo) videoObserver.observe(reelVideo);
+        };
+    </script>
+</body>
+</html>

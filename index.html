@@ -162,9 +162,19 @@
     const roles={movies:['联合导演','CO-DIRECTOR'],series:['副导演','ASSISTANT DIRECTOR'],shorts:['联合导演','CO-DIRECTOR'],global:['监制 · 联合导演','EXECUTIVE PRODUCER / CO-DIRECTOR']};
     const englishTitles={di_ren_undying:'',di_ren_wolf:'',di_ren:''};
     let category='movies';
+    const autoplayCategories=['movies','series','shorts','global'];
+    let autoplayTimer=null;
+    function resetFilmographyAutoplay(){
+      if(autoplayTimer)window.clearTimeout(autoplayTimer);
+      autoplayTimer=window.setTimeout(function advanceFilmography(){
+        const next=autoplayCategories[(autoplayCategories.indexOf(category)+1)%autoplayCategories.length];
+        renderWorks(next);
+        autoplayTimer=window.setTimeout(advanceFilmography,3000);
+      },3000);
+    }
     function renderWorks(next){category=next;document.querySelectorAll('[data-film-group]').forEach(g=>{g.hidden=g.dataset.filmGroup!==next;});document.querySelectorAll('[data-category]').forEach(b=>{const active=b.dataset.category===next;b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;});document.getElementById('film-panel').setAttribute('aria-labelledby','tab-'+next);}
     function showFilm(key,type){const p=rawProjects[key];document.getElementById('detail-poster').src=document.querySelector('[data-film="'+key+'"] img').src;document.getElementById('detail-poster').alt='《'+p.title+'》完整海报';document.getElementById('detail-type').textContent=labels[type][0]+' / '+labels[type][1];document.getElementById('detail-title').textContent=p.title;document.getElementById('detail-en').textContent=Object.hasOwn(englishTitles,key)?englishTitles[key]:p.titleEn;document.getElementById('detail-role').textContent=roles[type][0];document.getElementById('detail-role-en').textContent=roles[type][1];document.getElementById('detail-description').textContent=p.synopsis;document.getElementById('detail-description-en').textContent=p.synopsisEn;const achievements=document.querySelector('#description-'+key+' .work-achievements');document.getElementById('detail-achievements').replaceChildren(...(achievements?[achievements.cloneNode(true)]:[]));openDialog(document.getElementById('film-dialog'));}
-    const tabs=[...document.querySelectorAll('[data-category]')];tabs.forEach((b,i)=>{b.addEventListener('click',e=>{e.preventDefault();renderWorks(b.dataset.category);});b.addEventListener('keydown',e=>{let n;if(e.key==='ArrowRight')n=(i+1)%tabs.length;if(e.key==='ArrowLeft')n=(i-1+tabs.length)%tabs.length;if(e.key==='Home')n=0;if(e.key==='End')n=tabs.length-1;if(n!==undefined){e.preventDefault();tabs[n].focus();renderWorks(tabs[n].dataset.category);}});});
+    const tabs=[...document.querySelectorAll('[data-category]')];tabs.forEach((b,i)=>{b.addEventListener('click',e=>{e.preventDefault();renderWorks(b.dataset.category);resetFilmographyAutoplay();});b.addEventListener('keydown',e=>{let n;if(e.key==='ArrowRight')n=(i+1)%tabs.length;if(e.key==='ArrowLeft')n=(i-1+tabs.length)%tabs.length;if(e.key==='Home')n=0;if(e.key==='End')n=tabs.length-1;if(n!==undefined){e.preventDefault();tabs[n].focus();renderWorks(tabs[n].dataset.category);resetFilmographyAutoplay();}});});
     function openDialog(d){d.showModal();d.scrollTop=0;document.body.classList.add('locked');}
     document.querySelectorAll('dialog').forEach(d=>{d.querySelector('[data-close]').addEventListener('click',()=>d.close());d.addEventListener('close',()=>document.body.classList.remove('locked'));d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();});});
     document.getElementById('open-contact').addEventListener('click',e=>{if(typeof document.getElementById('contact-dialog').showModal==='function'){e.preventDefault();openDialog(document.getElementById('contact-dialog'));}});
@@ -179,6 +189,7 @@
       document.documentElement.classList.add('enhanced');
       document.getElementById('catalogue-note').innerHTML='<span></span>轻触海报，查看完整海报、作品简介与职务。';
       renderWorks('movies');
+      resetFilmographyAutoplay();
     }
   </script>
 </body>
